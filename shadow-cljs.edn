@@ -1,0 +1,19 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/main" "src/test" "src/dev"]
+
+ :dependencies
+ []
+
+ :dev-http {8080 "./"}
+
+ :nrepl        {:port 8702}
+
+ :builds
+ {:app
+  {:target :browser
+   :output-dir "./"
+   :modules {:main {:init-fn cljs-playground.core/init}}
+   }}
+
+ }

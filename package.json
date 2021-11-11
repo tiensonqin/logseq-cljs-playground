@@ -1,0 +1,18 @@
+{
+  "name": "logseq-cljs-playground",
+  "version": "0.0.1",
+  "private": true,
+  "main": "index.html",
+  "author": "Tienson Qin",
+  "license": "MIT",
+  "devDependencies": {
+    "shadow-cljs": "2.16.2"
+  },
+  "logseq": {
+    "id": "_byud67luv"
+  },
+  "scripts": {
+    "watch": "npx shadow-cljs watch app",
+    "release": "npx shadow-cljs release app"
+  }
+}
