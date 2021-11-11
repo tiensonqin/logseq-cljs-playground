@@ -17,6 +17,8 @@ yarn watch
 
 ### Connect to the repl
 
+Check https://shadow-cljs.github.io/docs/UsersGuide.html#cider.
+
 ## Release
 
 ``` shell
