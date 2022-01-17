@@ -14,5 +14,8 @@
   "scripts": {
     "watch": "npx shadow-cljs watch app",
     "release": "npx shadow-cljs release app"
+  },
+  "dependencies": {
+    "@logseq/libs": "^0.0.1-alpha.34"
   }
 }

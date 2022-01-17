@@ -23,3 +23,7 @@ pom.xml.asc
 main.js
 cljs-runtime
 manifest.edn
+
+.calva/
+.clj-kondo/
+.lsp/
