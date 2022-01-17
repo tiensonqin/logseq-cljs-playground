@@ -54,15 +54,21 @@
 
 (defn create-sample-page! []
   (go (let [page (<? (ensure-page! "Clojure Plugin"))
-            {:keys [uuid]} page]
-        (<? (insert-batch-block! uuid [{:content "testing" :sibling false}]))
+            block (<? (insert-block! "Clojure Plugin" "Content" {:isPageBlock true}))
+            {:keys [uuid]} block]
+        
+        (<? (insert-batch-block!
+             uuid
+             [{:content "Child 1"}
+              {:content "Child 2"
+               :children [{:content "Grandchild"}]}]))
+        
         (<? (show-msg! "Updated Clojure Plugin page")))))
 
 (defn main []
   (go
     (<? (register-slash-command! "Clojure Slash" create-sample-page!))
     (<? (show-msg! "Hello from Clojure!"))))
-
 
 (defn init []
   (go (try (ready main)
