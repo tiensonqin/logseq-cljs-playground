@@ -17,9 +17,17 @@
         v (j/get obj method)
         r (if-not (ifn? v) v
                   (apply (partial j/call obj method) jsargs))]
+  
     (if (instance? js/Promise r)
       (go (js->clj (wa/<?maybe r) :keywordize-keys true))
       (js->clj v :keywordize-keys true))))
+
+(defn with-promise-result [f]
+  (fn [& args]
+    (new js/Promise
+         (fn [resolve reject]
+           (go (try (resolve (wa/<?maybe (apply f args)))
+                    (catch :default e (reject e))))))))
 
 (def ready (partial logseq* js/logseq :ready))
 (def settings (partial logseq* js/logseq :settings))
@@ -32,15 +40,10 @@
 (def insert-editing-at-cursor!  (partial logseq* js/logseq.Editor :insertAtEditingCursor))
 (def insert-block! (partial logseq* js/logseq.Editor :insertBlock))
 (def insert-batch-block! (partial logseq* js/logseq.Editor :insertBatchBlock))
-(def datascriptQuery (partial logseq* js/logseq.DB :datascriptQuery))
 
-(defn with-promise-result [f]
-  (fn [& args]
-    (new js/Promise
-         (fn [resolve reject]
-           (go (try (resolve (wa/<?maybe (apply f args)))
-                    (catch :default e (reject e))))))))
-
+; note: query needs to be passed as string but cljs->js will convert it to a map
+(def datascript-query* (partial logseq* js/logseq.DB :datascriptQuery))
+(defn q [query] (datascript-query* (pr-str query)))
 
 (defn register-slash-command! [text callback]
   (logseq* js/logseq.Editor :registerSlashCommand text (with-promise-result callback)))
@@ -58,10 +61,12 @@
 (defn main []
   (go
     (<? (register-slash-command! "Clojure Slash" create-sample-page!))
-    (<? (show-msg! "Hello from Clojure!"))
-    (<? (create-sample-page!))))
+    (<? (show-msg! "Hello from Clojure!"))))
 
 
 (defn init []
   (go (try (ready main)
            (catch :default e (j/call js/console :error e)))))
+
+
+
